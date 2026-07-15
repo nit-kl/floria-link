@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build / coverage
+dist/
+coverage/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors / IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Logs & caches
+*.log
+.cache/
+.pytest_cache/
+.eslintcache
+
+# Local tooling
+.turbo/
+.vite/
