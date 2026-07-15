@@ -1,0 +1,10 @@
+{
+  "name": "floria-link",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Floria Link — 動く2Dアクションゲーム",
+  "scripts": {
+    "start": "npx --yes serve public -l 5173",
+    "extract": "python scripts/extract_sprites.py"
+  }
+}

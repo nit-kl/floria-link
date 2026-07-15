@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Floria Link — Resonance Garden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/train.css" />
+</head>
+<body>
+  <div id="app">
+    <canvas id="game" width="1280" height="720"></canvas>
+
+    <div id="hud" class="hidden">
+      <div class="top-bar">
+        <div class="castle ally">
+          <span class="label">花園拠点</span>
+          <div class="bar"><div id="ally-hp"></div></div>
+        </div>
+        <div class="wallet">
+          <div id="money">蜜 0</div>
+          <div id="nectar-row"><span>花蜜</span><b id="nectar">0</b></div>
+          <div id="stage-label">花畑 0/5 · 春</div>
+        </div>
+        <div class="castle enemy">
+          <span class="label">腐海の巣</span>
+          <div class="bar"><div id="enemy-hp"></div></div>
+        </div>
+      </div>
+
+      <div id="season-banner"></div>
+
+      <div id="deploy-bar">
+        <button id="btn-wallet" class="wallet-up" type="button" title="温室を強化して蜜の上限と収入を上げる">
+          <span>温室↑</span>
+          <small id="wallet-cost">蜜120</small>
+        </button>
+        <button id="btn-burst" class="burst-btn" type="button" title="花蜜を消費して全リンクを爆発させる">
+          <span>共振爆発</span>
+          <small id="burst-cost">花蜜40</small>
+        </button>
+        <div id="unit-buttons"></div>
+      </div>
+    </div>
+
+    <div id="overlay">
+      <div id="title-screen" class="screen">
+        <p class="eyebrow">Floria Link</p>
+        <h1>Resonance Garden</h1>
+        <p class="tagline">育てて、つなげて、花畑を取り戻せ</p>
+        <ul class="feature-list">
+          <li><b>開花育成</b> — ウマ娘風のターン制で花精を育てる</li>
+          <li><b>共振リンク</b> — 違う花精が近いと光の線が敵を削る</li>
+          <li><b>花畑制圧</b> — 区画を咲かせても勝利できる</li>
+        </ul>
+        <button id="btn-train" class="btn primary">開花育成へ</button>
+        <button id="btn-start" class="btn">花園へ出撃</button>
+        <p class="controls-blurb">育成結果は出撃に反映されます · 1〜6出撃 · W温室 · E共振爆発</p>
+      </div>
+
+      <!-- キャラ選択（育成） -->
+      <div id="train-select-screen" class="screen wide hidden">
+        <h2>開花させる花精</h2>
+        <p class="tagline">育てた評価ランクが出撃時の強さになります</p>
+        <div id="train-roster" class="roster-grid"></div>
+        <div class="row-btns">
+          <button id="btn-train-back" class="btn">タイトルへ</button>
+          <button id="btn-to-battle" class="btn primary">育成済みで出撃</button>
+        </div>
+      </div>
+
+      <!-- サポート編成 -->
+      <div id="support-deck-screen" class="screen wide hidden">
+        <h2>サポートカード編成</h2>
+        <p class="tagline" id="support-deck-trainee">園の先輩カードを最大3枚。出撃キャラとは別のサポートです</p>
+        <div class="deck-slots" id="deck-slots"></div>
+        <p class="deck-hint">候補（クリックでセット／解除）</p>
+        <div id="support-pool" class="support-pool"></div>
+        <div class="row-btns">
+          <button id="btn-deck-back" class="btn">戻る</button>
+          <button id="btn-deck-start" class="btn primary">この編成で育成開始</button>
+        </div>
+      </div>
+
+      <!-- 育成セッション（ウマ娘風） -->
+      <div id="train-screen" class="train-stage hidden">
+        <div class="train-bg"></div>
+        <div class="train-topbar">
+          <div class="turn-badge">
+            <span class="turn-label">残り</span>
+            <strong id="train-remain">12</strong>
+            <span class="turn-unit">日</span>
+          </div>
+          <div class="goal-banner" id="train-goal">
+            <span class="goal-tag">NEXT</span>
+            <span id="train-goal-text">芽吹き試験</span>
+            <div class="goal-meter"><i id="train-goal-fill"></i></div>
+          </div>
+          <div class="mood-chip" id="train-mood-chip">
+            <span id="train-mood-face">😐</span>
+            <span id="train-mood">普通</span>
+          </div>
+        </div>
+
+        <div class="train-main">
+          <div class="train-stage-left">
+            <div class="portrait-wrap" id="train-portrait-wrap">
+              <div class="portrait-glow"></div>
+              <img id="train-portrait" alt="" />
+              <div class="spark-layer" id="train-sparks"></div>
+              <div class="float-nums" id="train-float-nums"></div>
+            </div>
+            <div class="chara-meta">
+              <h2 id="train-name">—</h2>
+              <p id="train-title"></p>
+            </div>
+            <div class="vital-block">
+              <div class="vital-head">
+                <span>活力</span>
+                <b id="train-energy-label">100/100</b>
+              </div>
+              <div class="energy-bar big"><div id="train-energy-fill"></div></div>
+            </div>
+            <div class="support-strip" id="support-strip"></div>
+          </div>
+
+          <div class="train-stage-right">
+            <div id="train-stats" class="stat-panel"></div>
+            <div class="facility-row" id="train-actions"></div>
+            <div class="sub-actions">
+              <button type="button" class="sub-btn rest" id="btn-rest">休憩</button>
+              <button type="button" class="sub-btn outing" id="btn-outing">お出かけ</button>
+            </div>
+            <div id="train-log" class="train-ticker"></div>
+            <div class="row-btns train-footer">
+              <button id="btn-train-abort" class="btn">育成中止</button>
+              <button id="btn-train-finish" class="btn primary hidden">育成完了</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 結果ポップアップ -->
+        <div id="train-result-overlay" class="train-result hidden">
+          <div class="train-result-card" id="train-result-card">
+            <div class="result-ribbon" id="result-ribbon">練習成功！</div>
+            <div class="result-pose"><img id="result-pose-img" alt="" /></div>
+            <div class="result-supports" id="result-supports"></div>
+            <div class="result-deltas" id="result-deltas"></div>
+            <p class="result-extra" id="result-extra"></p>
+            <button type="button" class="btn primary" id="btn-result-ok">OK</button>
+          </div>
+        </div>
+
+        <!-- 開花完了ファンファーレ -->
+        <div id="train-finish-overlay" class="train-finish hidden">
+          <div class="finish-card">
+            <p class="finish-eyebrow">BLOOM COMPLETE</p>
+            <h2 id="finish-rank">A</h2>
+            <p id="finish-name">—</p>
+            <p id="finish-total" class="muted"></p>
+            <button type="button" class="btn primary" id="btn-finish-ok">確認</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="result-screen" class="screen hidden">
+        <h2 id="result-title">勝利！</h2>
+        <p id="result-score"></p>
+        <button id="btn-retry" class="btn primary">もう一度出撃</button>
+        <button id="btn-menu" class="btn">タイトルへ</button>
+        <button id="btn-result-train" class="btn">開花育成へ</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,570 @@
+{
+  "characters": [
+    {
+      "id": 0,
+      "poses": {
+        "idle": {
+          "file": "assets/sprites/char-0/idle.png",
+          "w": 365,
+          "h": 548,
+          "nativeFacing": 1,
+          "anchorX": 0.473
+        },
+        "run": {
+          "file": "assets/sprites/char-0/run.png",
+          "w": 356,
+          "h": 509,
+          "nativeFacing": -1,
+          "anchorX": 0.465
+        },
+        "attack": {
+          "file": "assets/sprites/char-0/attack.png",
+          "w": 330,
+          "h": 545,
+          "nativeFacing": 1,
+          "anchorX": 0.533
+        },
+        "carry": {
+          "file": "assets/sprites/char-0/carry.png",
+          "w": 304,
+          "h": 492,
+          "nativeFacing": 1,
+          "anchorX": 0.47
+        },
+        "hurt": {
+          "file": "assets/sprites/char-0/hurt.png",
+          "w": 323,
+          "h": 436,
+          "nativeFacing": -1,
+          "anchorX": 0.365
+        }
+      },
+      "name": "ヴィオラ",
+      "title": "花鎚の魔女",
+      "color": "#9b59d6",
+      "accent": "#d4a5ff",
+      "role": "melee",
+      "desc": "巨大ハンマーで地面を砕く近接アタッカー",
+      "artFacing": -1
+    },
+    {
+      "id": 1,
+      "poses": {
+        "idle": {
+          "file": "assets/sprites/char-1/idle.png",
+          "w": 299,
+          "h": 386,
+          "nativeFacing": 1,
+          "anchorX": 0.618
+        },
+        "run": {
+          "file": "assets/sprites/char-1/run.png",
+          "w": 349,
+          "h": 379,
+          "nativeFacing": -1,
+          "anchorX": 0.493
+        },
+        "attack": {
+          "file": "assets/sprites/char-1/attack.png",
+          "w": 510,
+          "h": 375,
+          "nativeFacing": -1,
+          "anchorX": 0.635
+        },
+        "carry": {
+          "file": "assets/sprites/char-1/carry.png",
+          "w": 322,
+          "h": 372,
+          "nativeFacing": -1,
+          "anchorX": 0.451
+        },
+        "hurt": {
+          "file": "assets/sprites/char-1/hurt.png",
+          "w": 347,
+          "h": 324,
+          "nativeFacing": 1,
+          "anchorX": 0.491
+        }
+      },
+      "name": "アクア",
+      "title": "潮騒の詠唱者",
+      "color": "#3aa0e8",
+      "accent": "#9ad8ff",
+      "role": "ranged",
+      "desc": "水弾を連射する遠距離メイジ",
+      "artFacing": -1
+    },
+    {
+      "id": 2,
+      "poses": {
+        "idle": {
+          "file": "assets/sprites/char-2/idle.png",
+          "w": 343,
+          "h": 545,
+          "nativeFacing": 1,
+          "anchorX": 0.557
+        },
+        "run": {
+          "file": "assets/sprites/char-2/run.png",
+          "w": 307,
+          "h": 475,
+          "nativeFacing": -1,
+          "anchorX": 0.506
+        },
+        "attack": {
+          "file": "assets/sprites/char-2/attack.png",
+          "w": 367,
+          "h": 622,
+          "nativeFacing": 1,
+          "anchorX": 0.383
+        },
+        "carry": {
+          "file": "assets/sprites/char-2/carry.png",
+          "w": 328,
+          "h": 485,
+          "nativeFacing": 1,
+          "anchorX": 0.463
+        },
+        "hurt": {
+          "file": "assets/sprites/char-2/hurt.png",
+          "w": 343,
+          "h": 466,
+          "nativeFacing": -1,
+          "anchorX": 0.517
+        }
+      },
+      "name": "リリア",
+      "title": "白蓮の守護者",
+      "color": "#6dbf6a",
+      "accent": "#c8f0a8",
+      "role": "support",
+      "desc": "自然魔法で範囲を浄化するヒーラー寄り",
+      "artFacing": -1
+    },
+    {
+      "id": 3,
+      "poses": {
+        "idle": {
+          "file": "assets/sprites/char-3/idle.png",
+          "w": 334,
+          "h": 499,
+          "nativeFacing": 1,
+          "anchorX": 0.569
+        },
+        "run": {
+          "file": "assets/sprites/char-3/run.png",
+          "w": 359,
+          "h": 437,
+          "nativeFacing": -1,
+          "anchorX": 0.516
+        },
+        "attack": {
+          "file": "assets/sprites/char-3/attack.png",
+          "w": 368,
+          "h": 455,
+          "nativeFacing": -1,
+          "anchorX": 0.462
+        },
+        "carry": {
+          "file": "assets/sprites/char-3/carry.png",
+          "w": 332,
+          "h": 449,
+          "nativeFacing": 1,
+          "anchorX": 0.541
+        },
+        "hurt": {
+          "file": "assets/sprites/char-3/hurt.png",
+          "w": 301,
+          "h": 434,
+          "nativeFacing": -1,
+          "anchorX": 0.471
+        }
+      },
+      "name": "スプラウト",
+      "title": "新芽の風使い",
+      "color": "#4caf50",
+      "accent": "#a8e6a0",
+      "role": "melee",
+      "desc": "風を纏った杖で素早く斬りつける",
+      "artFacing": -1
+    },
+    {
+      "id": 4,
+      "poses": {
+        "idle": {
+          "file": "assets/sprites/char-4/idle.png",
+          "w": 232,
+          "h": 496,
+          "nativeFacing": 1,
+          "anchorX": 0.466
+        },
+        "run": {
+          "file": "assets/sprites/char-4/run.png",
+          "w": 291,
+          "h": 491,
+          "nativeFacing": -1,
+          "anchorX": 0.514
+        },
+        "attack": {
+          "file": "assets/sprites/char-4/attack.png",
+          "w": 372,
+          "h": 514,
+          "nativeFacing": 1,
+          "anchorX": 0.461
+        },
+        "carry": {
+          "file": "assets/sprites/char-4/carry.png",
+          "w": 264,
+          "h": 465,
+          "nativeFacing": 1,
+          "anchorX": 0.53
+        },
+        "hurt": {
+          "file": "assets/sprites/char-4/hurt.png",
+          "w": 311,
+          "h": 444,
+          "nativeFacing": -1,
+          "anchorX": 0.457
+        }
+      },
+      "name": "サンフラ",
+      "title": "陽炎の機械士",
+      "color": "#e6b422",
+      "accent": "#ffe08a",
+      "role": "heavy",
+      "desc": "電撃メイスで高火力を叩き込む",
+      "artFacing": -1
+    },
+    {
+      "id": 5,
+      "poses": {
+        "idle": {
+          "file": "assets/sprites/char-5/idle.png",
+          "w": 315,
+          "h": 468,
+          "nativeFacing": -1,
+          "anchorX": 0.511
+        },
+        "run": {
+          "file": "assets/sprites/char-5/run.png",
+          "w": 276,
+          "h": 406,
+          "nativeFacing": -1,
+          "anchorX": 0.513
+        },
+        "attack": {
+          "file": "assets/sprites/char-5/attack.png",
+          "w": 350,
+          "h": 434,
+          "nativeFacing": -1,
+          "anchorX": 0.573
+        },
+        "carry": {
+          "file": "assets/sprites/char-5/carry.png",
+          "w": 278,
+          "h": 400,
+          "nativeFacing": 1,
+          "anchorX": 0.503
+        },
+        "hurt": {
+          "file": "assets/sprites/char-5/hurt.png",
+          "w": 310,
+          "h": 394,
+          "nativeFacing": -1,
+          "anchorX": 0.356
+        }
+      },
+      "name": "エンバー",
+      "title": "紅葉の炎舞",
+      "color": "#e85d3a",
+      "accent": "#ffb08a",
+      "role": "melee",
+      "desc": "炎の杖で広範囲を焼き払う",
+      "artFacing": -1
+    }
+  ],
+  "enemies": [
+    {
+      "id": 100,
+      "poses": {
+        "idle": {
+          "file": "assets/sprites/enemy-0/idle.png",
+          "w": 265,
+          "h": 331,
+          "nativeFacing": 1,
+          "anchorX": 0.508
+        },
+        "run": {
+          "file": "assets/sprites/enemy-0/run.png",
+          "w": 253,
+          "h": 328,
+          "nativeFacing": -1,
+          "anchorX": 0.521
+        },
+        "attack": {
+          "file": "assets/sprites/enemy-0/attack.png",
+          "w": 349,
+          "h": 335,
+          "nativeFacing": 1,
+          "anchorX": 0.432
+        },
+        "carry": {
+          "file": "assets/sprites/enemy-0/carry.png",
+          "w": 285,
+          "h": 368,
+          "nativeFacing": 1,
+          "anchorX": 0.552
+        },
+        "hurt": {
+          "file": "assets/sprites/enemy-0/hurt.png",
+          "w": 306,
+          "h": 346,
+          "nativeFacing": 1,
+          "anchorX": 0.499
+        }
+      },
+      "name": "ドクダケ",
+      "title": "森の毒茸",
+      "color": "#8b5eb8",
+      "accent": "#d2a8ff",
+      "role": "melee",
+      "desc": "胞子を飛ばして攻撃する怪しいキノコ",
+      "artFacing": -1
+    },
+    {
+      "id": 101,
+      "poses": {
+        "idle": {
+          "file": "assets/sprites/enemy-1/idle.png",
+          "w": 213,
+          "h": 367,
+          "nativeFacing": 1,
+          "anchorX": 0.57
+        },
+        "run": {
+          "file": "assets/sprites/enemy-1/run.png",
+          "w": 219,
+          "h": 361,
+          "nativeFacing": 1,
+          "anchorX": 0.465
+        },
+        "attack": {
+          "file": "assets/sprites/enemy-1/attack.png",
+          "w": 308,
+          "h": 356,
+          "nativeFacing": 1,
+          "anchorX": 0.526
+        },
+        "carry": {
+          "file": "assets/sprites/enemy-1/carry.png",
+          "w": 240,
+          "h": 361,
+          "nativeFacing": 1,
+          "anchorX": 0.62
+        },
+        "hurt": {
+          "file": "assets/sprites/enemy-1/hurt.png",
+          "w": 105,
+          "h": 296,
+          "nativeFacing": 1,
+          "anchorX": 0.417
+        }
+      },
+      "name": "クロメ",
+      "title": "茨の新芽",
+      "color": "#4a3c31",
+      "accent": "#c09ad8",
+      "role": "melee",
+      "desc": "棘の鞭で攻撃する黒い新芽の魔獣",
+      "artFacing": 1
+    },
+    {
+      "id": 102,
+      "poses": {
+        "idle": {
+          "file": "assets/sprites/enemy-2/idle.png",
+          "w": 295,
+          "h": 410,
+          "nativeFacing": 1,
+          "anchorX": 0.535
+        },
+        "run": {
+          "file": "assets/sprites/enemy-2/run.png",
+          "w": 297,
+          "h": 398,
+          "nativeFacing": 1,
+          "anchorX": 0.488
+        },
+        "attack": {
+          "file": "assets/sprites/enemy-2/attack.png",
+          "w": 350,
+          "h": 389,
+          "nativeFacing": 1,
+          "anchorX": 0.443
+        },
+        "carry": {
+          "file": "assets/sprites/enemy-2/carry.png",
+          "w": 397,
+          "h": 482,
+          "nativeFacing": 1,
+          "anchorX": 0.418
+        },
+        "hurt": {
+          "file": "assets/sprites/enemy-2/hurt.png",
+          "w": 335,
+          "h": 423,
+          "nativeFacing": 1,
+          "anchorX": 0.547
+        }
+      },
+      "name": "ロゼッタ",
+      "title": "闇薔薇の魔女",
+      "color": "#a83279",
+      "accent": "#ff8ad6",
+      "role": "ranged",
+      "desc": "闇の薔薇魔法で遠距離から攻撃する魔女",
+      "artFacing": 1
+    },
+    {
+      "id": 103,
+      "poses": {
+        "idle": {
+          "file": "assets/sprites/enemy-3/idle.png",
+          "w": 294,
+          "h": 350,
+          "nativeFacing": 1,
+          "anchorX": 0.508
+        },
+        "run": {
+          "file": "assets/sprites/enemy-3/run.png",
+          "w": 319,
+          "h": 344,
+          "nativeFacing": 1,
+          "anchorX": 0.475
+        },
+        "attack": {
+          "file": "assets/sprites/enemy-3/attack.png",
+          "w": 348,
+          "h": 332,
+          "nativeFacing": 1,
+          "anchorX": 0.394
+        },
+        "carry": {
+          "file": "assets/sprites/enemy-3/carry.png",
+          "w": 435,
+          "h": 403,
+          "nativeFacing": 1,
+          "anchorX": 0.468
+        },
+        "hurt": {
+          "file": "assets/sprites/enemy-3/hurt.png",
+          "w": 415,
+          "h": 398,
+          "nativeFacing": 1,
+          "anchorX": 0.495
+        }
+      },
+      "name": "ブロッケン",
+      "title": "鉄棘ゴーレム",
+      "color": "#5c5048",
+      "accent": "#b8a090",
+      "role": "heavy",
+      "desc": "鉄棘の岩でできた頑強なゴーレム",
+      "artFacing": 1
+    }
+  ],
+  "roster": [
+    {
+      "id": 0,
+      "name": "ヴィオラ",
+      "title": "花鎚の魔女",
+      "color": "#9b59d6",
+      "accent": "#d4a5ff",
+      "role": "melee",
+      "desc": "巨大ハンマーで地面を砕く近接アタッカー"
+    },
+    {
+      "id": 1,
+      "name": "アクア",
+      "title": "潮騒の詠唱者",
+      "color": "#3aa0e8",
+      "accent": "#9ad8ff",
+      "role": "ranged",
+      "desc": "水弾を連射する遠距離メイジ"
+    },
+    {
+      "id": 2,
+      "name": "リリア",
+      "title": "白蓮の守護者",
+      "color": "#6dbf6a",
+      "accent": "#c8f0a8",
+      "role": "support",
+      "desc": "自然魔法で範囲を浄化するヒーラー寄り"
+    },
+    {
+      "id": 3,
+      "name": "スプラウト",
+      "title": "新芽の風使い",
+      "color": "#4caf50",
+      "accent": "#a8e6a0",
+      "role": "melee",
+      "desc": "風を纏った杖で素早く斬りつける"
+    },
+    {
+      "id": 4,
+      "name": "サンフラ",
+      "title": "陽炎の機械士",
+      "color": "#e6b422",
+      "accent": "#ffe08a",
+      "role": "heavy",
+      "desc": "電撃メイスで高火力を叩き込む"
+    },
+    {
+      "id": 5,
+      "name": "エンバー",
+      "title": "紅葉の炎舞",
+      "color": "#e85d3a",
+      "accent": "#ffb08a",
+      "role": "melee",
+      "desc": "炎の杖で広範囲を焼き払う"
+    }
+  ],
+  "enemy_roster": [
+    {
+      "id": 100,
+      "name": "ドクダケ",
+      "title": "森の毒茸",
+      "color": "#8b5eb8",
+      "accent": "#d2a8ff",
+      "role": "melee",
+      "desc": "胞子を飛ばして攻撃する怪しいキノコ"
+    },
+    {
+      "id": 101,
+      "name": "クロメ",
+      "title": "茨の新芽",
+      "color": "#4a3c31",
+      "accent": "#c09ad8",
+      "role": "melee",
+      "desc": "棘の鞭で攻撃する黒い新芽の魔獣"
+    },
+    {
+      "id": 102,
+      "name": "ロゼッタ",
+      "title": "闇薔薇の魔女",
+      "color": "#a83279",
+      "accent": "#ff8ad6",
+      "role": "ranged",
+      "desc": "闇の薔薇魔法で遠距離から攻撃する魔女"
+    },
+    {
+      "id": 103,
+      "name": "ブロッケン",
+      "title": "鉄棘ゴーレム",
+      "color": "#5c5048",
+      "accent": "#b8a090",
+      "role": "heavy",
+      "desc": "鉄棘の岩でできた頑強なゴーレム"
+    }
+  ]
+}
