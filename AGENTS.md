@@ -4,9 +4,11 @@
 
 ## プロダクト
 
-- 静的配信のバニラ JS 2D ゲーム（育成 + 拠点防衛バトル）
-- エントリ: `public/index.html` → `public/js/main.js`（または分割後の `app/`）
-- サーバー API・認証・DB はない。永続化はブラウザ `localStorage` のみ
+- 静的配信のバニラ JS 2D ゲーム（花園奪還キャンペーン = 育成ドラマ + 共振バトル）
+- エントリ: `public/index.html` → `public/js/app/main.js`
+- 章定義: `public/js/data/campaign/chapters.js`
+- 進行セーブ: `floria-campaign-v1` / 育成: `floria-bloom-careers-v1`
+- サーバー API・認証・DB はない
 
 ## 触る境界
 

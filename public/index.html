@@ -9,10 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/train.css" />
+  <link rel="stylesheet" href="css/hub.css" />
+  <link rel="stylesheet" href="css/ux.css" />
 </head>
 <body>
   <div id="app">
     <canvas id="game" width="1280" height="720"></canvas>
+
+    <div id="battle-tip" aria-live="polite"></div>
 
     <div id="hud" class="hidden">
       <div class="top-bar">
@@ -34,11 +38,13 @@
       <div id="season-banner"></div>
 
       <div id="deploy-bar">
-        <button id="btn-wallet" class="wallet-up" type="button" title="温室を強化して蜜の上限と収入を上げる">
+        <button id="btn-wallet" class="wallet-up" type="button" title="温室を強化（W）">
+          <span class="key-badge">W</span>
           <span>温室↑</span>
           <small id="wallet-cost">蜜120</small>
         </button>
-        <button id="btn-burst" class="burst-btn" type="button" title="花蜜を消費して全リンクを爆発させる">
+        <button id="btn-burst" class="burst-btn" type="button" title="共振爆発（E）">
+          <span class="key-badge">E</span>
           <span>共振爆発</span>
           <small id="burst-cost">花蜜40</small>
         </button>
@@ -50,15 +56,46 @@
       <div id="title-screen" class="screen">
         <p class="eyebrow">Floria Link</p>
         <h1>Resonance Garden</h1>
-        <p class="tagline">育てて、つなげて、花畑を取り戻せ</p>
-        <ul class="feature-list">
-          <li><b>開花育成</b> — ウマ娘風のターン制で花精を育てる</li>
-          <li><b>共振リンク</b> — 違う花精が近いと光の線が敵を削る</li>
-          <li><b>二つの勝利</b> — 敵城破壊、または花畑をすべて開花</li>
-        </ul>
-        <button id="btn-train" class="btn primary">開花育成へ</button>
-        <button id="btn-start" class="btn">花園へ出撃</button>
-        <p class="controls-blurb">育成結果は出撃に反映されます · 1〜6出撃 · W温室 · E共振爆発</p>
+        <p class="tagline">育てて、つなげて、花園を奪還せよ</p>
+        <p id="title-progress" aria-live="polite"></p>
+        <div class="chip-row">
+          <span class="chip"><b>育てる</b> → 戦場へ直結</span>
+          <span class="chip"><b>つなげる</b> 共振リンク</span>
+          <span class="chip"><b>取り戻す</b> 区画奪還</span>
+        </div>
+        <div class="cta-stack">
+          <button id="btn-campaign" class="btn primary">花園奪還をはじめる</button>
+          <button id="btn-hub" class="btn">園の見取り図</button>
+        </div>
+        <p class="controls-blurb">出撃中: 1〜6で花精 · W温室 · E共振爆発</p>
+      </div>
+
+      <div id="hub-screen" class="screen wide hidden">
+        <div class="hub-head">
+          <div>
+            <h2>園の見取り図</h2>
+            <p id="hub-status">光る地点をタップして進もう</p>
+          </div>
+          <button type="button" id="btn-hub-next" class="hub-next-cta">次の章へ進む</button>
+        </div>
+        <div class="hub-layout">
+          <div id="hub-map" aria-label="花園マップ"></div>
+          <div id="hub-chapter-list"></div>
+        </div>
+        <div id="hub-codex" class="hub-codex"></div>
+        <div class="hub-actions row-btns">
+          <button id="btn-hub-title" class="btn">タイトルへ</button>
+          <button id="btn-hub-free" class="btn hidden">フリー出撃</button>
+          <button id="btn-hub-reset" class="btn danger">進行リセット</button>
+        </div>
+      </div>
+
+      <div id="story-screen" class="screen hidden" tabindex="0">
+        <p class="eyebrow" id="story-title">Story</p>
+        <div class="story-progress" id="story-progress" aria-hidden="true"></div>
+        <p id="story-body"></p>
+        <button id="btn-story-next" class="btn primary">次へ</button>
+        <p class="story-hint">画面タップ / Enter でも進めます</p>
       </div>
 
       <!-- キャラ選択（育成） -->
@@ -142,6 +179,14 @@
           </div>
         </div>
 
+        <!-- 分岐選択 -->
+        <div id="train-choice-overlay" class="train-result hidden">
+          <div class="train-result-card" id="train-choice-card">
+            <div class="result-ribbon" id="choice-prompt">選択</div>
+            <div id="choice-options" class="choice-options"></div>
+          </div>
+        </div>
+
         <!-- 結果ポップアップ -->
         <div id="train-result-overlay" class="train-result hidden">
           <div class="train-result-card" id="train-result-card">
@@ -167,11 +212,14 @@
       </div>
 
       <div id="result-screen" class="screen hidden">
+        <div class="result-emoji" id="result-emoji" aria-hidden="true">❀</div>
         <h2 id="result-title">勝利！</h2>
         <p id="result-score"></p>
-        <button id="btn-retry" class="btn primary">もう一度出撃</button>
-        <button id="btn-menu" class="btn">タイトルへ</button>
-        <button id="btn-result-train" class="btn">開花育成へ</button>
+        <div class="cta-stack">
+          <button id="btn-retry" class="btn primary">もう一度出撃</button>
+          <button id="btn-result-train" class="btn">園の見取り図へ</button>
+          <button id="btn-menu" class="btn">タイトルへ</button>
+        </div>
       </div>
     </div>
   </div>

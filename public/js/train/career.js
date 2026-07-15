@@ -12,14 +12,23 @@ import {
   STAT_MAX,
   TRAIN_OPTS,
 } from "./constants.js";
+import { pickBranchEvent } from "./events.js";
 import { emptyGrowth, failChance, rankFromStats } from "./formulas.js";
 import { makeSupportSlot } from "./supports.js";
 
 export class BloomCareer {
-  /** @param {object} charDef trainee character
-   *  @param {Array<string|object>} supportDeck support card ids or defs */
-  constructor(charDef, supportDeck = []) {
+  /**
+   * @param {object} charDef trainee character
+   * @param {Array<string|object>} supportDeck support card ids or defs
+   * @param {{ maxTurns?: number, skipGoals?: boolean, scenarioGoal?: object|null }} [opts]
+   */
+  constructor(charDef, supportDeck = [], opts = {}) {
     this.char = charDef;
+    this.maxTurns = opts.maxTurns ?? MAX_TURNS;
+    this.skipGoals = !!opts.skipGoals;
+    this.scenarioGoal = opts.scenarioGoal || null;
+    this.firedBranches = new Set();
+    this.pendingChoice = null;
     const seen = new Set();
     this.supports = supportDeck
       .map(makeSupportSlot)
@@ -35,6 +44,9 @@ export class BloomCareer {
     this.stats = emptyGrowth();
     const supportNames = this.supports.map((s) => s.name).join("・") || "なし";
     this.log = [`${charDef.name}の開花育成、スタート！`, `サポート: ${supportNames}`];
+    if (this.maxTurns < MAX_TURNS) {
+      this.log.push(`短期育成（${this.maxTurns}日）— 戦場へつながる芽吹き`);
+    }
     this.done = false;
     this.goalResults = [];
     this.lastPose = "idle";
@@ -161,6 +173,7 @@ export class BloomCareer {
   }
 
   _checkGoal() {
+    if (this.skipGoals) return null;
     const goal = GOALS.find((g) => g.turn === this.turn);
     if (!goal) return null;
     const before = this._snapshotStats();
@@ -190,10 +203,18 @@ export class BloomCareer {
 
   _advanceTurn() {
     const events = [];
-    const ev = this._randomEvent();
-    if (ev) {
-      events.push(ev);
-      this.log.push(ev.text);
+    const branch = pickBranchEvent(this);
+    if (branch && !this.firedBranches.has(branch.id)) {
+      this.pendingChoice = branch;
+      this.firedBranches.add(branch.id);
+      events.push({ kind: "choice", text: branch.prompt, choiceId: branch.id });
+      this.log.push(`選択: ${branch.prompt}`);
+    } else {
+      const ev = this._randomEvent();
+      if (ev) {
+        events.push(ev);
+        this.log.push(ev.text);
+      }
     }
     const goal = this._checkGoal();
     if (goal) {
@@ -202,7 +223,7 @@ export class BloomCareer {
     }
 
     let finished = null;
-    if (this.turn >= MAX_TURNS) {
+    if (this.turn >= this.maxTurns) {
       this.done = true;
       const rank = rankFromStats(this.stats);
       finished = { rank, total: this.total };
@@ -325,6 +346,30 @@ export class BloomCareer {
       msgs: msgs.concat(adv.events.map((e) => e.text)),
       events: adv.events,
       finished: adv.finished,
+    };
+  }
+
+  /** Resolve a pending branch choice by option id */
+  resolveChoice(optionId) {
+    const branch = this.pendingChoice;
+    if (!branch) return { ok: false, msgs: ["選択待ちではない"] };
+    const opt = branch.options.find((o) => o.id === optionId);
+    if (!opt) return { ok: false, msgs: ["不明な選択"] };
+    const before = this._snapshotStats();
+    const text = opt.apply(this) || opt.label;
+    this.pendingChoice = null;
+    const deltas = this._diffStats(before);
+    this.log.push(text);
+    return {
+      ok: true,
+      action: "choice",
+      deltas,
+      energyDelta: 0,
+      joined: [],
+      msgs: [text],
+      events: [{ kind: "choice-done", text }],
+      finished: null,
+      failed: false,
     };
   }
 

@@ -55,7 +55,14 @@ export class Game {
     this.burstFlash = 0;
     this.burstBuff = 0;
 
+    this.battleMode = "standard";
+    this.spawnMul = 1;
+    this.courierMul = 1;
+    this.battleTip = "";
+    this.linkCelebrated = false;
+
     this.plots = this._makePlots();
+    this.linkZones = this._makeLinkZones();
     this.flowers = this._seedFlowers();
     this.clouds = Array.from({ length: 6 }, (_, i) => ({
       x: i * 400 + Math.random() * 80,
@@ -75,6 +82,23 @@ export class Game {
       bloomed: false,
       pulse: Math.random() * Math.PI * 2,
     }));
+  }
+
+  /** Soft zones that extend resonance link range when allies stand inside */
+  _makeLinkZones() {
+    return [
+      { x: 620, w: 160, bonus: 70 },
+      { x: 1100, w: 180, bonus: 90 },
+      { x: 1500, w: 140, bonus: 60 },
+    ];
+  }
+
+  linkRangeFor(unit) {
+    let range = LINK_RANGE;
+    for (const z of this.linkZones || []) {
+      if (Math.abs(unit.x - z.x) < z.w / 2) range += z.bonus;
+    }
+    return range;
   }
 
   _seedFlowers() {
@@ -107,22 +131,43 @@ export class Game {
       .filter(Boolean);
   }
 
-  start() {
+  /**
+   * @param {{
+   *   mode?: string,
+   *   allyHp?: number,
+   *   enemyHp?: number,
+   *   money?: number,
+   *   nectar?: number,
+   *   spawnMul?: number,
+   *   courierMul?: number,
+   *   tip?: string,
+   * }} [opts]
+   */
+  start(opts = {}) {
+    const mode = opts.mode || "standard";
+    this.battleMode = mode;
+    this.spawnMul = opts.spawnMul ?? 1;
+    this.courierMul = opts.courierMul ?? 1;
+    this.battleTip = opts.tip || "";
+    this.linkCelebrated = false;
+
     this.units = [];
     this.links = [];
     this.fx = new FX();
     this.time = 0;
     this.shake = 0;
     this.camX = 0;
-    this.allyCastle = { x: 160, hp: 1300, maxHp: 1300 };
-    this.enemyCastle = { x: 2000, hp: 1800, maxHp: 1800 };
-    this.money = 180;
-    this.nectar = 12;
+    const allyHp = opts.allyHp ?? 1300;
+    const enemyHp = opts.enemyHp ?? (mode === "tutorial" ? 520 : 1800);
+    this.allyCastle = { x: 160, hp: allyHp, maxHp: allyHp };
+    this.enemyCastle = { x: 2000, hp: enemyHp, maxHp: enemyHp };
+    this.money = opts.money ?? (mode === "tutorial" ? 280 : 180);
+    this.nectar = opts.nectar ?? (mode === "tutorial" ? 20 : 12);
     this.walletLevel = 0;
     for (const id of Object.keys(this.recharge)) this.recharge[id] = 0;
-    this.enemySpawnTimer = 1.2;
-    this.enemyBudget = 60;
-    this.courierTimer = 10;
+    this.enemySpawnTimer = mode === "tutorial" ? 2.2 : 1.2;
+    this.enemyBudget = mode === "tutorial" ? 30 : 60;
+    this.courierTimer = mode === "tutorial" ? 14 : 10;
     this.ended = false;
     this.score = 0;
     this.winReason = "";
@@ -131,14 +176,21 @@ export class Game {
     this.burstFlash = 0;
     this.burstBuff = 0;
     this.plots = this._makePlots();
+    this.linkZones = this._makeLinkZones();
     this.state = "play";
     this._announceSeason();
+
+    if (this.battleTip) {
+      this.fx.text(this.allyCastle.x + 220, GROUND - 180, this.battleTip, "#ff9ad4");
+      window.dispatchEvent(new CustomEvent("game:tip", { detail: { text: this.battleTip } }));
+    }
+
     const trained = this.trainedSummary();
     if (trained.length) {
       const best = [...trained].sort((a, b) => b.rank.localeCompare(a.rank))[0];
-      this.fx.text(this.allyCastle.x + 160, GROUND - 160, `開花戦力 ${trained.length}体 · 最高${best.rank}`, "#ffe08a");
-    } else {
-      this.fx.text(this.allyCastle.x + 160, GROUND - 160, "未育成でも出撃可 · 育てると強くなる", "#c8f0a8");
+      this.fx.text(this.allyCastle.x + 160, GROUND - 140, `開花戦力 ${trained.length}体 · 最高${best.rank}`, "#ffe08a");
+    } else if (mode !== "tutorial") {
+      this.fx.text(this.allyCastle.x + 160, GROUND - 140, "未育成でも出撃可 · 育てると強くなる", "#c8f0a8");
     }
     this.syncHud();
   }
@@ -328,7 +380,8 @@ export class Game {
         const b = allies[j];
         if (a.def.id === b.def.id) continue;
         const dist = Math.abs(a.x - b.x);
-        if (dist > LINK_RANGE || dist < 40) continue;
+        const range = Math.max(this.linkRangeFor(a), this.linkRangeFor(b));
+        if (dist > range || dist < 40) continue;
         a.linked = true;
         b.linked = true;
         this.links.push({
@@ -337,6 +390,15 @@ export class Game {
           power: 1 + (a.atkMul + b.atkMul) * 0.2 + ((a.stats.linkBonus || 0) + (b.stats.linkBonus || 0)) * 0.15,
         });
       }
+    }
+
+    if (this.links.length && !this.linkCelebrated) {
+      this.linkCelebrated = true;
+      this.fx.text(this.camX + W * 0.5, 200, "共振リンク！", "#fff0ff");
+      this.audio.special();
+      window.dispatchEvent(new CustomEvent("game:tip", {
+        detail: { text: "共振リンク発生！ 線の下の敵が削られていく", celebrate: true },
+      }));
     }
 
     for (const link of this.links) {
@@ -436,21 +498,23 @@ export class Game {
     this.applySeasonBuffs();
 
     this.enemySpawnTimer -= dt;
-    this.enemyBudget += (16 + this.time * 0.35 + this.bloomedCount * 2) * dt;
+    this.enemyBudget += (16 + this.time * 0.35 + this.bloomedCount * 2) * this.spawnMul * dt;
     if (this.enemySpawnTimer <= 0) {
+      const cap = this.battleMode === "tutorial" ? 4 : 7;
       const enemyCount = this.units.filter((u) => u.alive && u.team === -1 && !u.courier).length;
-      if (enemyCount < 7 && this.enemyBudget > 55) {
+      if (enemyCount < cap && this.enemyBudget > 55) {
         this.spawnEnemy(false);
         this.enemyBudget -= 65;
       }
-      this.enemySpawnTimer = Math.max(0.85, 2.2 - this.time * 0.015);
+      const baseCd = this.battleMode === "tutorial" ? 2.8 : 2.2;
+      this.enemySpawnTimer = Math.max(0.85, baseCd - this.time * 0.015) / Math.max(0.35, this.spawnMul);
     }
 
     this.courierTimer -= dt;
     if (this.courierTimer <= 0) {
       const livingCouriers = this.units.filter((u) => u.alive && u.courier).length;
       if (livingCouriers < 1) this.spawnEnemy(true);
-      this.courierTimer = Math.max(8, 16 - this.time * 0.05);
+      this.courierTimer = Math.max(8, 16 - this.time * 0.05) * (this.courierMul || 1);
     }
 
     for (const u of this.units) u.update(dt, this);

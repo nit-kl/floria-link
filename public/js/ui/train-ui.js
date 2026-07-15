@@ -298,15 +298,25 @@ export function createTrainUi({
     document.getElementById("train-name").textContent = ch.name;
     document.getElementById("train-title").textContent = ch.title;
 
-    const remain = career.done ? 0 : MAX_TURNS - career.turn + 1;
+    const maxTurns = career.maxTurns || MAX_TURNS;
+    const remain = career.done ? 0 : maxTurns - career.turn + 1;
     document.getElementById("train-remain").textContent = String(remain);
 
-    const goal = nextGoal(career.turn);
-    const need = goal.require.total;
-    const pct = Math.min(100, (100 * career.total) / need);
-    document.getElementById("train-goal-text").textContent =
-      `${goal.name}（合計 ${career.total} / ${need}）· ${career.turn}日目`;
-    document.getElementById("train-goal-fill").style.width = `${pct}%`;
+    if (career.scenarioGoal?.text) {
+      const prefer = career.scenarioGoal.preferStat;
+      const preferVal = prefer ? career.stats[prefer] : career.total;
+      const pct = Math.min(100, (100 * preferVal) / (prefer ? 400 : 600));
+      document.getElementById("train-goal-text").textContent =
+        `章目標: ${career.scenarioGoal.text} · ${career.turn}/${maxTurns}日`;
+      document.getElementById("train-goal-fill").style.width = `${pct}%`;
+    } else {
+      const goal = nextGoal(career.turn);
+      const need = goal.require.total;
+      const pct = Math.min(100, (100 * career.total) / need);
+      document.getElementById("train-goal-text").textContent =
+        `${goal.name}（合計 ${career.total} / ${need}）· ${career.turn}日目`;
+      document.getElementById("train-goal-fill").style.width = `${pct}%`;
+    }
 
     const mood = career.mood;
     document.getElementById("train-mood").textContent = mood.label;
@@ -339,16 +349,16 @@ export function createTrainUi({
     const specialtySet = new Set(career.supports.map((s) => s.specialty));
     const actions = document.getElementById("train-actions");
     actions.innerHTML = "";
-    if (!career.done) {
-      for (const opt of career.trainOptions) {
-        const chance = failChance(career.energy, opt.energy);
-        const pctFail = Math.round(chance * 100);
-        const hasSup = specialtySet.has(opt.id);
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = `facility-card ${hasSup ? "has-support" : ""}`;
-        b.style.setProperty("--fc", opt.color);
-        b.disabled = career.energy < opt.energy;
+  if (!career.done && !career.pendingChoice) {
+    for (const opt of career.trainOptions) {
+      const chance = failChance(career.energy, opt.energy);
+      const pctFail = Math.round(chance * 100);
+      const hasSup = specialtySet.has(opt.id);
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = `facility-card ${hasSup ? "has-support" : ""}`;
+      b.style.setProperty("--fc", opt.color);
+      b.disabled = career.energy < opt.energy;
         b.innerHTML = `
         <span class="fail-badge ${pctFail === 0 ? "zero" : ""}">${pctFail === 0 ? "安全" : `失敗${pctFail}%`}</span>
         <div class="fname">${opt.label}</div>
@@ -363,11 +373,11 @@ export function createTrainUi({
       }
     }
 
-    btnRest.disabled = career.done;
-    btnOuting.disabled = career.done;
-    btnTrainFinish.classList.toggle("hidden", !career.done);
-    btnTrainAbort.classList.toggle("hidden", career.done);
-  }
+  btnRest.disabled = career.done || !!career.pendingChoice;
+  btnOuting.disabled = career.done || !!career.pendingChoice;
+  btnTrainFinish.classList.toggle("hidden", !career.done);
+  btnTrainAbort.classList.toggle("hidden", career.done);
+}
 
   function applyActionResult(res) {
     const career = getCareerSession();
@@ -390,11 +400,16 @@ export function createTrainUi({
     const joinedIds = (res.joined || []).map((s) => s.id);
     pushLog(res.msgs);
     renderCareer(res.deltas, joinedIds, res.tipTriggered?.id);
+    if (res.action === "choice") {
+      if (Object.keys(res.deltas || {}).length) showTrainResult(res);
+      else renderCareer(res.deltas);
+      return;
+    }
     showTrainResult(res);
   }
 
-  function startCareerWithDeck() {
-    const career = new BloomCareer(getTrainee(), getDeckIds());
+  function startCareerWithDeck(opts = {}) {
+    const career = new BloomCareer(getTrainee(), getDeckIds(), opts);
     setCareerSession(career);
     setPendingFinished(null);
     document.getElementById("train-log").innerHTML = "";
@@ -404,13 +419,55 @@ export function createTrainUi({
     audio.tone(480, 0.1, "triangle", 0.04, 200);
   }
 
+  /** Campaign: start with fixed trainee / deck / turn count */
+  function startCampaignTraining({
+    trainee,
+    deckIds = [],
+    maxTurns,
+    skipGoals = true,
+    scenarioGoal = null,
+  }) {
+    setTrainee(trainee);
+    setDeckIds(deckIds);
+    startCareerWithDeck({ maxTurns, skipGoals, scenarioGoal });
+  }
+
+  function showChoiceIfNeeded() {
+    const career = getCareerSession();
+    const branch = career?.pendingChoice;
+    if (!branch) return false;
+    const overlay = document.getElementById("train-choice-overlay");
+    const prompt = document.getElementById("choice-prompt");
+    const box = document.getElementById("choice-options");
+    // Ensure result/finish overlays aren't blocking the choice
+    resultOverlay.classList.add("hidden");
+    finishOverlay.classList.add("hidden");
+    prompt.textContent = branch.prompt;
+    box.innerHTML = "";
+    for (const opt of branch.options) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "btn primary";
+      b.textContent = opt.label;
+      b.addEventListener("click", () => {
+        overlay.classList.add("hidden");
+        applyActionResult(career.resolveChoice(opt.id));
+      });
+      box.appendChild(b);
+    }
+    overlay.classList.remove("hidden");
+    return true;
+  }
+
   return {
     buildTrainRoster,
     renderDeckUI,
     renderCareer,
     applyActionResult,
     startCareerWithDeck,
+    startCampaignTraining,
     showFinishFanfare,
+    showChoiceIfNeeded,
     resultOverlay,
     finishOverlay,
     getPendingFinished,

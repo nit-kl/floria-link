@@ -263,6 +263,23 @@ html, body {
   filter: drop-shadow(0 4px 6px rgba(0,0,0,.35));
   position: relative;
 }
+
+@media (pointer: coarse) {
+  #deploy-bar {
+    padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px));
+    gap: 8px;
+  }
+  .unit-btn {
+    min-height: 88px;
+    padding: 8px 4px 10px;
+    border-radius: 16px;
+  }
+  .unit-btn img { height: 64px; }
+  .wallet-up, .burst-btn {
+    min-width: 76px;
+    min-height: 72px;
+  }
+}
 .unit-btn .name {
   font-size: 11px;
   font-weight: 700;

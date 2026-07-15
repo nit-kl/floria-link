@@ -18,15 +18,16 @@
 
 ビルドステップなし（現状）。`npm start` は `public/` を静的配信する。
 
-## 画面遷移
+## 画面遷移（花園奪還キャンペーン）
 
 ```
 title
-  ├─→ train-select → support-deck → train-session → (finish) → train-select
-  └─→ battle (play) → result → title | train-select | battle
+  ├─→ campaign chapter → story → train → battle → result → hub
+  └─→ hub（園の見取り図）→ chapter / free battle
 ```
 
-URL ルーティングは使わない。オーバーレイの `.screen` 表示切替のみ。
+URL ルーティングは使わない。オーバーレイの `.screen` 表示切替のみ。  
+章定義: `data/campaign/chapters.js` / 進行セーブ: `data/campaign-repository.js`
 
 ## モジュール依存（目標）
 

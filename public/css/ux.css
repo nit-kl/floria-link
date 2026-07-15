@@ -1,0 +1,382 @@
+/* UX polish — motion, clarity, map-first hub */
+
+:root {
+  --leaf: #7ec98a;
+  --petal: #ff9ad4;
+  --sun: #ffd56a;
+  --focus: #fff4c8;
+}
+
+/* Screen enter */
+#overlay .screen {
+  animation: screenIn 0.45s cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
+
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); filter: blur(2px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+/* Title — one clear job */
+#title-screen .cta-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.35rem;
+}
+
+#title-screen .btn.primary {
+  min-width: min(320px, 86vw);
+  font-size: 1.1rem;
+  padding: 0.95rem 1.6rem;
+  animation: ctaPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 10px 30px rgba(255, 126, 182, 0.35); }
+  50% { box-shadow: 0 12px 40px rgba(255, 184, 108, 0.5); }
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.25rem 0 1.1rem;
+}
+
+.chip {
+  font-size: 0.78rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--stroke);
+  color: var(--muted);
+}
+
+.chip b { color: #ffd6ef; font-weight: 700; }
+
+#title-progress {
+  font-size: 0.85rem;
+  color: var(--sun);
+  min-height: 1.2em;
+  margin-bottom: 0.35rem;
+}
+
+/* Hub — map first */
+#hub-screen {
+  width: min(980px, 96vw);
+  max-height: min(92vh, 760px);
+  padding: 1.1rem 1.2rem 1rem;
+}
+
+#hub-screen .hub-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.65rem;
+}
+
+#hub-screen .hub-head h2 {
+  margin: 0;
+  font-size: clamp(1.25rem, 3vw, 1.7rem);
+}
+
+#hub-status {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.hub-next-cta {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 0.7rem 1.15rem;
+  border-radius: 999px;
+  color: #2a1230;
+  background: linear-gradient(120deg, #ff7eb6, #ffb86c);
+  box-shadow: 0 8px 24px rgba(255, 126, 182, 0.4);
+  transition: transform 0.15s ease;
+}
+
+.hub-next-cta:hover { transform: translateY(-2px) scale(1.02); }
+.hub-next-cta:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.hub-layout {
+  grid-template-columns: 1.35fr 1fr;
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+#hub-map {
+  min-height: min(42vh, 340px);
+  border-radius: 18px;
+  cursor: default;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 12px 36px rgba(0, 0, 0, 0.35);
+}
+
+.hub-plot {
+  pointer-events: auto;
+  cursor: pointer;
+  min-width: 0;
+  padding: 0;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 0 0 rgba(255, 180, 220, 0.5);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.hub-plot small {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(12, 10, 24, 0.82);
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 2;
+}
+
+.hub-plot:hover small,
+.hub-plot:focus-visible small { opacity: 1; }
+
+.hub-plot span {
+  font-size: 0.95rem;
+  line-height: 1;
+  color: #3a2040;
+}
+
+.hub-plot.locked {
+  opacity: 0.7;
+  background: rgba(40, 30, 60, 0.45);
+  border-color: rgba(180, 160, 200, 0.35);
+  cursor: not-allowed;
+}
+
+.hub-plot.locked span { color: #c4b6e0; }
+
+.hub-plot.unlocked {
+  background: rgba(255, 210, 230, 0.85);
+  border-color: #ff9ad4;
+  box-shadow: 0 0 18px rgba(255, 154, 212, 0.55);
+}
+
+.hub-plot.next {
+  animation: plotBeat 1.6s ease-in-out infinite;
+  background: #ffe08a;
+  border-color: #fff;
+}
+
+@keyframes plotBeat {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(255, 213, 106, 0.55); }
+  50% { transform: translate(-50%, -50%) scale(1.12); box-shadow: 0 0 0 10px rgba(255, 213, 106, 0); }
+}
+
+.hub-plot:hover:not(:disabled):not(.locked) {
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+#hub-chapter-list {
+  max-height: min(42vh, 340px);
+  gap: 0.45rem;
+  padding-right: 0.15rem;
+}
+
+.hub-chapter {
+  position: relative;
+  padding: 0.75rem 0.85rem 0.75rem 0.95rem;
+  border-radius: 14px;
+}
+
+.hub-chapter .hc-action {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #2a1230;
+  background: linear-gradient(120deg, #ffb0e0, #ffd56a);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
+.hub-chapter.locked .hc-action { display: none; }
+.hub-chapter.done .hc-action {
+  background: rgba(126, 255, 154, 0.25);
+  color: #c8f0a8;
+}
+
+.hub-chapter.current {
+  animation: chapterGlow 2s ease-in-out infinite;
+}
+
+@keyframes chapterGlow {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(255, 213, 106, 0.35); }
+  50% { box-shadow: 0 0 0 2px rgba(255, 213, 106, 0.65), 0 0 20px rgba(255, 213, 106, 0.2); }
+}
+
+.hub-codex details {
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--stroke);
+  padding: 0.35rem 0.65rem 0.55rem;
+}
+
+.hub-codex summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--sun);
+  padding: 0.45rem 0.15rem;
+  list-style: none;
+}
+
+.hub-codex summary::-webkit-details-marker { display: none; }
+.hub-codex summary::before {
+  content: "▸ ";
+  display: inline-block;
+  transition: transform 0.15s;
+}
+.hub-codex details[open] summary::before { transform: rotate(90deg); }
+
+.hub-actions {
+  margin-top: 0.75rem;
+  justify-content: flex-start;
+}
+
+.hub-actions .btn { margin: 0; font-size: 0.9rem; padding: 0.55rem 1rem; }
+.hub-actions .btn.danger {
+  opacity: 0.65;
+  font-size: 0.8rem;
+}
+
+/* Story — above train-stage (z-index 20) */
+#story-screen {
+  width: min(560px, 92vw);
+  cursor: pointer;
+  position: relative;
+  z-index: 40;
+}
+
+#story-screen .story-progress {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-bottom: 0.65rem;
+}
+
+#story-screen .story-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+#story-screen .story-dot.on {
+  background: var(--petal);
+  box-shadow: 0 0 8px rgba(255, 154, 212, 0.7);
+}
+
+#story-body {
+  min-height: 5rem;
+  animation: lineFade 0.35s ease both;
+}
+
+@keyframes lineFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.story-hint {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.35rem;
+}
+
+/* Battle HUD clarity */
+#deploy-bar { pointer-events: auto; }
+
+.unit-btn .key-badge,
+.wallet-up .key-badge,
+.burst-btn .key-badge {
+  position: absolute;
+  top: 4px;
+  left: 5px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.1rem 0.35rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #ffe8b0;
+  z-index: 2;
+}
+
+.wallet-up, .burst-btn { position: relative; }
+
+.unit-btn.flash {
+  animation: deployFlash 0.35s ease;
+}
+
+@keyframes deployFlash {
+  0% { transform: scale(0.94); filter: brightness(1.6); }
+  100% { transform: none; filter: none; }
+}
+
+#battle-tip {
+  border-radius: 14px;
+  padding: 0.75rem 1.15rem;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+#battle-tip.show {
+  animation: tipPop 0.4s cubic-bezier(0.22, 1.4, 0.36, 1);
+}
+
+@keyframes tipPop {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px) scale(0.94); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+/* Result */
+#result-screen .result-emoji {
+  font-size: 2.2rem;
+  margin-bottom: 0.25rem;
+  animation: popIn 0.5s ease both;
+}
+
+#result-score {
+  color: var(--muted);
+  margin: 0.5rem 0 1.1rem;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+/* Train finish CTA */
+#btn-train-finish,
+#btn-finish-ok {
+  min-width: 12rem;
+}
+
+@media (max-width: 780px) {
+  .hub-layout { grid-template-columns: 1fr; }
+  #hub-map { min-height: 220px; }
+  #hub-chapter-list { max-height: 220px; }
+  .hub-plot { width: 2.1rem; height: 2.1rem; }
+}

@@ -20,4 +20,5 @@ export {
   growthToBattleMods,
 } from "./formulas.js";
 export { BloomCareer } from "./career.js";
+export { BRANCH_EVENTS, pickBranchEvent } from "./events.js";
 export { getCareer, loadCareers, saveCareers } from "../data/careers-repository.js";

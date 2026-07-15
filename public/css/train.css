@@ -732,3 +732,18 @@
   background: rgba(255,213,106,.2);
   color: #ffe08a;
 }
+
+.choice-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0.75rem 0 0.25rem;
+  width: min(100%, 360px);
+}
+
+.choice-options .btn {
+  width: 100%;
+  white-space: normal;
+  line-height: 1.35;
+  padding: 0.7rem 0.9rem;
+}

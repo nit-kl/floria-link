@@ -1,5 +1,5 @@
 /** Bump when shipped assets change so browsers refetch images. */
-export const ASSET_VERSION = "5";
+export const ASSET_VERSION = "6";
 
 export function withAssetVersion(src) {
   if (!src) return src;

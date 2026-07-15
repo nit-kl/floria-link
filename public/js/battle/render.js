@@ -8,6 +8,7 @@ export function drawGame(game) {
   }
 
   drawBackground(game);
+  drawLinkZones(game);
   drawPlots(game);
   drawCastle(game, game.allyCastle, 1);
   drawCastle(game, game.enemyCastle, -1);
@@ -122,6 +123,27 @@ function drawHill(ctx, offset, base, color) {
   ctx.lineTo(W, H);
   ctx.closePath();
   ctx.fill();
+}
+
+function drawLinkZones(game) {
+  const ctx = game.ctx;
+  for (const z of game.linkZones || []) {
+    const x = z.x - game.camX;
+    if (x < -120 || x > W + 120) continue;
+    ctx.save();
+    ctx.fillStyle = "rgba(255, 154, 212, 0.12)";
+    ctx.strokeStyle = "rgba(255, 176, 224, 0.45)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(x, GROUND - 6, z.w * 0.48, 22, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "rgba(255, 230, 250, 0.7)";
+    ctx.font = "11px 'Zen Maru Gothic', sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("リンク帯", x, GROUND - 28);
+    ctx.restore();
+  }
 }
 
 function drawPlots(game) {
