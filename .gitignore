@@ -37,3 +37,11 @@ venv/
 # Local tooling
 .turbo/
 .vite/
+
+# Godot generated data and exports
+.godot/
+export/
+
+# Blender automatic backups
+*.blend1
+*.blend2
